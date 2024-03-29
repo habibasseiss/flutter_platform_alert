@@ -81,8 +81,8 @@ class FlutterPlatformAlertPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
         if (args == null) {
           result.error("No args", "Args is a null object.", "")
         } else {
-          val windowTitle = args.getOrDefault("windowTitle", "")
-          val text = args.getOrDefault("text", "")
+          val windowTitle = args["windowTitle"] as String?
+          val text = args["text"] as String?
           val positiveButtonTitle = args.getOrDefault("positiveButtonTitle", "")
           val negativeButtonTitle = args.getOrDefault("negativeButtonTitle", "")
           val neutralButtonTitle = args.getOrDefault("neutralButtonTitle", "")
@@ -91,7 +91,10 @@ class FlutterPlatformAlertPlugin : FlutterPlugin, MethodCallHandler, ActivityAwa
           val builder = AlertDialog.Builder(
             this.activity,
             getDialogStyle()
-          ).setTitle(windowTitle).setMessage(text)
+          ).apply {
+            if (windowTitle != null) setTitle(windowTitle)
+            if (text != null) setMessage(text)
+          }
           var buttonCount = 0
           if (positiveButtonTitle.isNotEmpty()) {
             builder.setPositiveButton(positiveButtonTitle) { _, _ -> result.success("positive_button") }
